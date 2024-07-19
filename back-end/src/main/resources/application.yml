@@ -1,0 +1,48 @@
+server:
+  port: 8088
+spring:
+  mvc:
+    path match:
+      matching-strategy: ant_path_matcher
+  ######################################
+  #
+  # 数据库服务相关配置
+  #
+  ######################################
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/practice?serverTimezone=UTC&useUnicode=true&characterEncoding=UTF-8&useSSL=false&autoReconnect=true&allowPublicKeyRetrieval=true&rewriteBatchedStatements=true&allowMultiQueries=true
+    #地址和端口号、启动方式可以自行设定，这里是MySQL默认地址和优化过的启动方式
+    username: root #自行设定
+    password: yourpassword #自行设置
+    hikari:
+      # 数据源名称，用于标识和配置特定的数据源
+      pool-name: DataSourceHikariCP
+      # 连接超时设置，单位毫秒，超过这个时间仍未建立连接将抛出异常
+      connection-timeout: 30000
+      # 最小空闲连接数，确保池中始终有至少这个数量的空闲连接
+      minimum-idle: 5
+      # 池中允许的最大连接数，超过这个数量的连接请求将被拒绝或等待
+      maximum-pool-size: 20
+      # 自动提交设置，true表示每个语句后自动提交，false表示需要显式提交
+      auto-commit: true
+      # 空闲连接的最长等待时间，超过这个时间的空闲连接将被回收
+      idle-timeout: 600000
+      # 连接的最大生命周期，超过这个时间的连接无论是否在使用都将被回收
+      max-lifetime: 1800000
+######################################
+# application.yml
+# API⽂档相关配置-设置swagger3是否开启状态
+
+# Springfox
+# Swagger
+######################################
+springfox:
+  documentation:
+    swagger-ui:
+     enabled: true
+knife4j:
+  setting:
+    enableSwaggerModels: true
+

@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta HTTP-EQUIV="pragma" CONTENT="no-cache">
+    <meta HTTP-EQUIV="Cache-Control" CONTENT="no-cache, must-revalidate">
+    <meta HTTP-EQUIV="expires" CONTENT="0">
+    <title>首页</title>
+    <link rel="stylesheet" href="../../css/element.css">
+    <link rel="stylesheet" href="../../css/base.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+        #wrapper {
+            padding: 20px;
+        }
+        .el-card__header {
+            background-color: deepskyblue;
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+        }
+        .el-card__body {
+            padding: 20px;
+        }
+        .el-collapse-item__header {
+            background-color: #fafafa;
+            font-size: 16px;
+            font-weight: bold;
+            padding: 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        .el-collapse-item__header:hover {
+            background-color: #e0e0e0;
+        }
+        .echart-container {
+            width: 100%;
+            height: 400px;
+            margin: 0 auto;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            font-size: 16px;
+            color: #fff;
+        }
+        .user-info img {
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+<div id="wrapper" v-cloak>
+    <el-row :gutter="20">
+        <el-col :span="12">
+            <el-card>
+                <div slot="header" class="clearfix">
+                    系统公告
+                </div>
+                <el-collapse accordion v-model="active">
+                    <el-collapse-item :name="index" v-for="(item, index) in notices" :key="index">
+                        <template slot="title">
+                            <b>{{ item.title }}</b>
+                            <span style="margin-left: 50px; color: #888">{{ item.time }}</span>
+                        </template>
+                        <div style="padding: 0 20px">{{ item.content }}</div>
+                    </el-collapse-item>
+                </el-collapse>
+            </el-card>
+        </el-col>
+        <el-col :span="12">
+            <el-card>
+                <div slot="header" class="clearfix">
+                    用户地区比例统计
+                </div>
+                <div id="main" class="echart-container"></div>
+            </el-card>
+        </el-col>
+    </el-row>
+    <el-row style="padding: 20px 0">
+        <el-col :span="24">
+            <el-card>
+                <div slot="header" class="clearfix">
+                    用户活跃度变化
+                </div>
+                <div id="polyline" class="echart-container"></div>
+            </el-card>
+        </el-col>
+    </el-row>
+    <el-row style="padding: 20px 0">
+        <el-col :span="24">
+            <el-card>
+                <div slot="header" class="clearfix">
+                    用户参与度统计
+                </div>
+                <div id="bar" class="echart-container"></div>
+            </el-card>
+        </el-col>
+    </el-row>
+</div>
+
+<script src="../../js/echarts.min.js"></script>
+<script src="../../js/china.js"></script>
+<script src="../../js/jquery.min.js"></script>
+<script src="../../js/vue.min.js"></script>
+<script src="../../js/element.js"></script>
+<script>
+    const pieOption = {
+        title: {text: '用户地区比例统计', left: 'center'},
+        tooltip: {trigger: 'item'},
+        legend: {top: '10%', left: 'center'},
+        series: [
+            {
+                name: '访问来源',
+                type: 'pie',
+                radius: ['40%', '70%'],
+                avoidLabelOverlap: false,
+                itemStyle: {
+                    borderRadius: 10,
+                    borderColor: '#fff',
+                    borderWidth: 2
+                },
+                label: {
+                    show: false,
+                    position: 'center'
+                },
+                emphasis: {
+                    label: {
+                        show: true,
+                        fontSize: '30',
+                        fontWeight: 'bold'
+                    }
+                },
+                labelLine: {
+                    show: false
+                },
+                data: []
+            }
+        ]
+    };
+
+    const lineOption = {
+        title: {text: '用户活跃度变化', left: 'center'},
+        tooltip: {trigger: 'axis'},
+        legend: {top: '10%', data: ['登录次数', '聊天时长', '新用户注册']},
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        xAxis: {
+            type: 'category',
+            boundaryGap: false,
+            data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
+        },
+        yAxis: {type: 'value'},
+        series: [
+            {
+                name: '登录次数',
+                type: 'line',
+                data: [120, 132, 101, 134, 90, 230, 210]
+            },
+            {
+                name: '聊天时长',
+                type: 'line',
+                data: [220, 182, 191, 234, 290, 330, 310]
+            },
+            {
+                name: '新用户注册',
+                type: 'line',
+                data: [150, 232, 201, 154, 190, 330, 410]
+            }
+        ]
+    };
+
+    const barOption = {
+        title: {text: '用户参与度统计', left: 'center'},
+        tooltip: {trigger: 'axis'},
+        legend: {top: '10%', data: ['点赞数量', '评论数量', '分享次数']},
+        xAxis: {
+            type: 'category',
+            data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
+        },
+        yAxis: {type: 'value'},
+        series: [
+            {
+                name: '点赞数量',
+                type: 'bar',
+                data: [120, 132, 101, 134, 90, 230, 210]
+            },
+            {
+                name: '评论数量',
+                type: 'bar',
+                data: [220, 182, 191, 234, 290, 330, 310]
+            },
+            {
+                name: '分享次数',
+                type: 'bar',
+                data: [150, 232, 201, 154, 190, 330, 410]
+            }
+        ]
+    };
+
+    new Vue({
+        el: "#wrapper",
+        data: {
+            active: 0,
+            users: [],
+            roles: [],
+            permissions: [],
+            notices: [],
+            user: {},
+            isCollapse: false
+        },
+        mounted() {
+            this.user = sessionStorage.getItem("user") ? JSON.parse(sessionStorage.getItem("user")) : {};
+            this.load();
+        },
+        methods: {
+            load() {
+                $.get("/api/notice/").then((res) => {
+                    this.notices = res.data;
+                });
+
+                let myChart = echarts.init(document.getElementById('main'));
+                $.ajax({
+                    url: "/api/user",
+                    success(res) {
+                        let address = Array.from(new Set(res.data.map(v => v.region)));
+                        address.forEach(item => {
+                            let count = res.data.filter(v => v.region === item).length;
+                            pieOption.series[0].data.push({name: item, value: count});
+                        });
+                        myChart.setOption(pieOption);
+                    }
+                });
+
+                let lineChart = echarts.init(document.getElementById('polyline'));
+                lineChart.setOption(lineOption);
+
+                let barChart = echarts.init(document.getElementById('bar'));
+                barChart.setOption(barOption);
+            },
+            handleCollapse() {
+                this.isCollapse = !this.isCollapse;
+            },
+            logout() {
+                $.get("/api/user/logout");
+                sessionStorage.removeItem("user");
+                location.href = "/page/end/login.html";
+            }
+        }
+    });
+</script>
+</body>
+</html>

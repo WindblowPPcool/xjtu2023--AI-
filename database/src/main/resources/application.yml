@@ -1,0 +1,31 @@
+server:
+  port: 9999
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root #自行设置
+    password: youpassword #自行设置
+    url: jdbc:mysql://localhost:3306/practice?characterEncoding=utf8&useSSL=false&serverTimezone=UTC&rewriteBatchedStatements=true&allowPublicKeyRetrieval=true #此处为MySQL默认端口和优化过的启动方式
+    type: com.alibaba.druid.pool.DruidDataSource
+#  jpa:
+#    generate-ddl: false
+#    hibernate:
+#      ddl-auto: none
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+
+logging:
+  level:
+    com:
+      example:
+        mapper:
+          debug
